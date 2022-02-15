@@ -1,4 +1,5 @@
 Map<String, String> frFR = {
+  'Demo App': 'Application de démonstration',
   'Parent': 'Parent',
   'Child': 'Enfant',
   'Quickstart': 'Démarrage rapide',

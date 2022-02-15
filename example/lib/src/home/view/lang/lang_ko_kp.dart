@@ -1,4 +1,5 @@
 Map<String, String> koKP = {
+  'Demo App': '데모 앱',
   'Parent': '부모의',
   'Child': '아이',
   'Quickstart': '빠른 시작',

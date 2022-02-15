@@ -19,4 +19,4 @@ library l10n_translator;
 ///
 ///
 
-export 'package:l10n_translator/src/L10n_translator.dart';
+export 'package:l10n_translator/src/l10n_translator.dart';

@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
     L10n.localeOf(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('l10n_Translator Demo App'),
+        title: Text('Demo App'.tr),
         actions: [_popupMenu],
       ),
       body: CustomScrollView(

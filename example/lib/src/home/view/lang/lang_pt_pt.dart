@@ -1,4 +1,5 @@
 Map<String, String> ptPT = {
+  'Demo App': 'Aplicativo de demonstração',
   'Parent': 'Pai',
   'Child': 'Filho',
   'Quickstart': 'Começo rápido',

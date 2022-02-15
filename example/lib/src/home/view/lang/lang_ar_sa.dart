@@ -1,4 +1,5 @@
 Map<String, String> arSA = {
+  'Demo App': 'تطبيق تجريبي',
   'Parent': 'الأبوين',
   'Child': 'طفل',
   'Quickstart': 'بداية سريعة',

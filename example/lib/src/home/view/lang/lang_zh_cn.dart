@@ -1,4 +1,5 @@
 Map<String, String> zhCN = {
+  'Demo App': '演示应用',
   'Parent': '家长',
   'Child': '孩子',
   'Quickstart': '快速开始',

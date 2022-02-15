@@ -1,4 +1,5 @@
 Map<String, String> hiIN = {
+  'Demo App': 'डेमो ऐप',
   'Parent': 'माता-पिता',
   'Child': 'बच्चा',
   'Quickstart': 'जल्दी शुरू',

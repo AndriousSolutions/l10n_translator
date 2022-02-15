@@ -1,4 +1,4 @@
-library i10n_translator;
+library l10n_translator;
 
 ///
 /// Copyright (C) 2019 Andrious Solutions
@@ -141,7 +141,7 @@ abstract class L10nTranslations {
   void initState() {
     _supportedLocales.clear();
     // Critical to set the App's Locale and translations.
-    final supported = supportedLocales;
+    supportedLocales;
   }
 
   /// Clear the Translations Map variable
@@ -320,7 +320,7 @@ class L10nLocale {
     var init = tr != null;
     if (init) {
       final size = _translations.length;
-      _translations.addAll(tr!.l10nMap);
+      _translations.addAll(tr.l10nMap);
       init = _translations.length > size;
     }
     return init;

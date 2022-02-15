@@ -1,4 +1,5 @@
 Map<String, String> esAR = {
+  'Demo App': 'Aplicación de demostración',
   'Parent': 'Padre',
   'Child': 'Niño',
   'Quickstart': 'Inicio rápido',
