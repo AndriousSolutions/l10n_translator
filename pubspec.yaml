@@ -1,13 +1,13 @@
-name: i10n_translator
+name: l10n_translator
 description: Allows you to easily provide translations of your local text to other supported languages.
 
-version: 2.2.1
+version: 1.0.0
 
 homepage: https://github.com/AndriousSolutions/i10n_translator
 repository: https://github.com/AndriousSolutions/i10n_translator
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -25,12 +25,11 @@ dependencies:
 # https://pub.dev/packages/universal_platform
   universal_platform: ^1.0.0
 
-# https://pub.dartlang.org/packages/prefs
-  prefs: ^3.0.0
-  #  path: ../../packages/prefs
-
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  # Used during Continuous Integration
+  integration_test:
     sdk: flutter
 
 # For information on the generic Dart part of this file, see the

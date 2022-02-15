@@ -24,7 +24,7 @@
 /android/
 !/android/app/proguard-rules.pro
 
-# Ignore App signing files
+# Ignore app signing files
 /*.jks
 
 # Don't need the iOS stuff
@@ -43,7 +43,7 @@
 /*.pydevproject
 /.project
 /.metadata
-/bin/**
+#/bin/**
 !/bin/i10n_translator.dart
 /tmp/**
 /tmp/**/*
