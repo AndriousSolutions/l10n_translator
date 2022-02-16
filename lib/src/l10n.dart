@@ -166,6 +166,11 @@ abstract class L10nTranslations {
     return locale;
   }
 
+  /// Return an instance of the L10Locale class
+  /// Really not needed. L10n. prefix can be used instead. Merely for conformity.
+  L10nLocale? of(BuildContext context) =>
+      Localizations.of<L10nLocale>(context, L10nLocale);
+
   /// Return a Locale object from the provided String
   Locale? toLocale(String? _locale) {
     Locale? locale;
@@ -187,14 +192,12 @@ abstract class L10nTranslations {
   }
 }
 
-// tr
-// Inspired by Jonny Borges GetX package.
-//
 /// Provide the suffix on every string for translation.
 extension L10nTranslation on String {
-  ///
+  /// Append to the end of Strings to change to a translation.
   String get tr => L10nLocale().translate(this);
 
+  ///  Copied from Jonny Borges' GetX package.
   String trArgs([List<String> args = const []]) {
     var key = tr;
     if (args.isNotEmpty) {
@@ -205,20 +208,23 @@ extension L10nTranslation on String {
     return key;
   }
 
+  ///  Copied from Jonny Borges' GetX package.
   String trPlural([String? pluralKey, int? i, List<String> args = const []]) {
     return i == 1 ? trArgs(args) : pluralKey!.trArgs(args);
   }
 
+  ///  Copied from Jonny Borges' GetX package.
   String trParams([Map<String, String> params = const {}]) {
-    var trans = tr;
+    var trs = tr;
     if (params.isNotEmpty) {
       params.forEach((key, value) {
-        trans = trans.replaceAll('@$key', value);
+        trs = trs.replaceAll('@$key', value);
       });
     }
-    return trans;
+    return trs;
   }
 
+  ///  Copied from Jonny Borges' GetX package.
   String trPluralParams(
       [String? pluralKey, int? i, Map<String, String> params = const {}]) {
     return i == 1 ? trParams(params) : pluralKey!.trParams(params);
@@ -481,21 +487,6 @@ class L10nLocale {
   /// Translate the String
   String s(String? word) => translate(word ?? '');
 
-  /// Forcibly rebuild the whole application from the sketch.
-  //todo: Put this in mvc_application gp
-  Future<void> appReassemble() async {
-    await engine!.performReassemble();
-  }
-
-  ///The current [WidgetsBinding]
-  WidgetsBinding? get engine {
-    //
-    if (WidgetsBinding.instance == null) {
-      WidgetsFlutterBinding();
-    }
-    return WidgetsBinding.instance;
-  }
-
   ///=======================================================
   ///  Code from the older version.
   ///
@@ -508,12 +499,8 @@ class L10nLocale {
   List<Locale> get _supportedLocales => _translations.keys.toList();
 
   /// Called by the LocalizationsDelegate object
-  Future<L10nLocale> load([Locale? locale]) async {
-    //
-    if (_supportedLocales.contains(locale)) {
-      //
-      setAppLocale(locale);
-    }
+  Future<L10nLocale> load([Locale? locale]) {
+    setAppLocale(locale);
     return SynchronousFuture<L10nLocale>(this);
   }
 
@@ -560,9 +547,14 @@ class L10nDelegate extends LocalizationsDelegate<L10nLocale> {
   L10nDelegate._();
   static L10nDelegate? _this;
 
-  static Locale? _locale;
-  static bool _reload = false;
+  Locale? _locale;
 
+  /// Return an instance of the L10Locale class
+  /// Really not needed. L10n. prefix can be used instead. Merely for conformity.
+  static L10nLocale? of(BuildContext context) =>
+      Localizations.of<L10nLocale>(context, L10nLocale);
+
+  /// Indicate to the Flutter framework this delegate can support the passed Locale.
   @override
   bool isSupported(Locale locale) {
     //
@@ -580,25 +572,22 @@ class L10nDelegate extends LocalizationsDelegate<L10nLocale> {
       supported = l10n._supportedLocales.contains(locale);
     }
 
+    // Assume you're supplied the App's Locale to this class as well.
+    if (l10n.appLocale == null) {
+      supported = l10n.setAppLocale(locale);
+    }
+
     return supported;
   }
 
+  /// Explicitly load the Locale provided by the Flutter framework.
   @override
   Future<L10nLocale> load(Locale locale) {
-    _locale ??= locale;
-    _reload = locale != _locale;
     _locale = locale;
     return L10nLocale().load(locale);
   }
 
+  /// Reload if the delegate has changed.
   @override
-  bool shouldReload(L10nDelegate old) {
-    bool reload = _reload;
-    if (!reload) {
-      // Reload if the delegate has changed.
-      reload = this != old;
-    }
-    _reload = false;
-    return reload;
-  }
+  bool shouldReload(L10nDelegate old) => _locale != old._locale;
 }
