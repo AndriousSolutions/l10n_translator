@@ -27,13 +27,15 @@ class MyApp extends StatelessWidget {
       return true;
     }());
 
+    final appTrs = AppTranslations();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-//      locale: AppTranslations().appLocale,
-      supportedLocales: AppTranslations().supportedLocales,
+      locale: appTrs.textLocale,
+      supportedLocales: appTrs.supportedLocales,
       home: const MyHomePage(),
     );
   }

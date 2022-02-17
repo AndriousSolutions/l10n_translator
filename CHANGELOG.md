@@ -1,4 +1,8 @@
 
+## 1.2.0
+February 16, 2022
+- Removed functions, trArgs trPlural trParams trPluralParams
+
 ## 1.1.0
 February 15, 2022
 - of(context) function to retrieve an instance of l10nLocale

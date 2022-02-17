@@ -193,42 +193,10 @@ abstract class L10nTranslations {
 }
 
 /// Provide the suffix on every string for translation.
+/// Append to the end of Strings to change to a translation.
 extension L10nTranslation on String {
-  /// Append to the end of Strings to change to a translation.
+  //
   String get tr => L10nLocale().translate(this);
-
-  ///  Copied from Jonny Borges' GetX package.
-  String trArgs([List<String> args = const []]) {
-    var key = tr;
-    if (args.isNotEmpty) {
-      for (final arg in args) {
-        key = key.replaceFirst(RegExp('%s'), arg.toString());
-      }
-    }
-    return key;
-  }
-
-  ///  Copied from Jonny Borges' GetX package.
-  String trPlural([String? pluralKey, int? i, List<String> args = const []]) {
-    return i == 1 ? trArgs(args) : pluralKey!.trArgs(args);
-  }
-
-  ///  Copied from Jonny Borges' GetX package.
-  String trParams([Map<String, String> params = const {}]) {
-    var trs = tr;
-    if (params.isNotEmpty) {
-      params.forEach((key, value) {
-        trs = trs.replaceAll('@$key', value);
-      });
-    }
-    return trs;
-  }
-
-  ///  Copied from Jonny Borges' GetX package.
-  String trPluralParams(
-      [String? pluralKey, int? i, Map<String, String> params = const {}]) {
-    return i == 1 ? trParams(params) : pluralKey!.trParams(params);
-  }
 }
 
 //ignore: non_constant_identifier_names
