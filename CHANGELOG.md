@@ -1,4 +1,10 @@
 
+## 1.3.0
+February 18, 2022
+- Localizations.maybeLocaleOf(context);
+- allowLocaleChange parameter takes precedence over allowDeviceChangeLoc
+- include localizationsDelegates in example app
+
 ## 1.2.0
 February 16, 2022
 - Removed functions, trArgs trPlural trParams trPluralParams

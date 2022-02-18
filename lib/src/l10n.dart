@@ -210,10 +210,13 @@ class L10nLocale {
 
   /// Record the device's Locale at that point in time.
   /// Traditionally placed in a build() function.
-  Locale? localeOf(BuildContext? context) {
+  Locale? localeOf(BuildContext? context, {bool? allowLocaleChange}) {
     Locale? locale;
     if (context != null) {
-      locale = Localizations.localeOf(context);
+      // May return null if unable to determine Localization.
+      locale = Localizations.maybeLocaleOf(context);
+    }
+    if (locale != null) {
       // Assign it as the App's Locale if not assigned yet.
       _appLocale ??= locale;
       if (_deviceLocale == null) {
@@ -221,8 +224,10 @@ class L10nLocale {
       } else if (locale != _deviceLocale) {
         // The device's Locale has changed.
         _deviceLocale = locale;
-        // If the App is to change Locale with the device.
-        if (allowDeviceChangeLocale) {
+        // allowLocaleChange parameter takes precedence over the field, allowDeviceChangeLocale
+        final change = allowLocaleChange == null && allowDeviceChangeLocale;
+        if (change || allowLocaleChange!) {
+          // The App is to change Locale with this device.
           setAppLocale(locale);
         }
       }
@@ -265,9 +270,11 @@ class L10nLocale {
         _appLocale = locale;
       } else {
         if (locale != _appLocale) {
+          // Important to reset to false to find any new translations.
           _localeSet = false;
           _appLocale = locale;
         }
+        // else, if they're the same, don't change anything.
       }
     }
     return set;

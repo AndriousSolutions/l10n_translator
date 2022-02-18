@@ -149,19 +149,14 @@ class _MyHomePageState extends State<MyHomePage> {
   /// A Popupmenu to display the app's available Locales.
   void langPopup() {
     //
-    final appLocales = AppLocales();
-
-    final locales = appLocales.localeNames;
-
-    // Assign to a local variable.
-    final appTrs = AppTranslations();
+    final locales = AppLocales().localeNames;
 
     for (int cnt = 0; cnt < locales.length; cnt++) {
       //
       _menuItems.add(
         PopupMenuItem(
           onTap: () {
-            appTrs.setAppLocale(locales[cnt].keys.first);
+            AppTranslations().setAppLocale(locales[cnt].keys.first);
             setState(() {});
           },
           child: Text(locales[cnt].values.first),
