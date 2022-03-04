@@ -1,4 +1,8 @@
 
+## 1.3.1
+March 03, 2022
+- Removed i10n_translator class
+
 ## 1.3.0
 February 18, 2022
 - Localizations.maybeLocaleOf(context);
