@@ -1,5 +1,5 @@
 
-## 2.0.0
+## 2.0.0+01
 March 05, 2022
 - Renamed extension to L10nTranslate
 - Rewrote abstract class L10nTranslations
