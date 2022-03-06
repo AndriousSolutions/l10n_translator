@@ -2,8 +2,6 @@
 ///
 ///
 
-import 'package:example/src/controller.dart';
-
 import 'package:example/src/view.dart';
 
 /// Highlights UI while debugging.
@@ -27,19 +25,21 @@ class MyApp extends StatelessWidget {
       return true;
     }());
 
-    final appTrs = AppTranslations();
+    // Establish the app's Locale.
+    AppTrs.localeOf(context);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      locale: appTrs.textLocale,
-      supportedLocales: appTrs.supportedLocales,
-      localizationsDelegates: const [
+      locale: AppTrs.textLocale,
+      supportedLocales: AppTrs.supportedLocales,
+      localizationsDelegates: [
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        AppTrs.delegate,
       ],
       home: const MyHomePage(),
     );

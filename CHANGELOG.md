@@ -1,4 +1,9 @@
 
+## 2.0.0
+March 05, 2022
+- Renamed extension to L10nTranslate
+- Rewrote abstract class L10nTranslations
+
 ## 1.3.1
 March 03, 2022
 - Removed i10n_translator class

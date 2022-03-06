@@ -1,16 +1,23 @@
+///
+///
+///
+
 import 'package:example/src/view.dart'
     show L10nTranslations, Locale, arSA, esAR, frFR, hiIN, koKP, ptPT, zhCN;
+
+//ignore: non_constant_identifier_names
+final AppTrs = AppTranslations();
 
 class AppTranslations extends L10nTranslations {
   factory AppTranslations() => _this ??= AppTranslations._();
   AppTranslations._();
   static AppTranslations? _this;
 
-  /// The app's default Locale
+  /// The text's original Locale
   @override
   Locale get textLocale => const Locale('en', 'US');
 
-  /// The app's translations.
+  /// The app's translations
   @override
   Map<Locale, Map<String, String>> get l10nMap => {
         const Locale('ar', 'SA'): arSA,
@@ -23,6 +30,7 @@ class AppTranslations extends L10nTranslations {
       };
 }
 
+/// Supply names of Locales to the App's popupmenu.
 class AppLocales {
   factory AppLocales() => _this ??= AppLocales._();
   AppLocales._();

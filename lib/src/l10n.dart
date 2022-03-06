@@ -30,173 +30,198 @@ import 'package:flutter/foundation.dart' show SynchronousFuture;
 
 import 'package:flutter/material.dart';
 
-abstract class L10nTranslations {
-  /// Supply the Locale represnted by the App's original Text/Strings
-  Locale get textLocale;
-
-  Map<Locale, Map<String, String>> get l10nMap;
-
-  /// For example, the Map variables would be defined in separate .dart files
-  ///
-  /// @override
-  /// Map<Locale, Map<String, String>> get l10nMap => {
-  ///   const Locale('ar', 'SA'): arSA,
-  ///   const Locale('hi', 'IN'): hiIN,
-  ///   const Locale('es', 'AR'): esAR,
-  ///   const Locale('fr', 'FR'): frFR,
-  ///   const Locale('pt', 'PT'): ptPT,
-  ///   const Locale('ko', 'KP'): koKP,
-  ///   const Locale('zh', 'CN'): zhCN,
-  /// };
-  ///
-  /// Each file will be dedicated to one particular Localizaiton language:
-  /// translations_arSA.dart
-  /// translations_hiIN.dart
-  /// translations_esAR.dart
-  /// translations_frFR.dart
-  /// translations_ptPT.dart
-  /// translations_zhCN.dart
-  ///
-  /// As an example, in the file translations_frFR.dart below:
-  ///
-  /// Map<String, String> frFR = {
-  ///   'Parent': 'Parent',
-  ///   'Child': 'Enfant',
-  ///   'Quickstart': 'Démarrage rapide',
-  ///   'Get Started': 'Commencer',
-  ///   'Parents': 'Parents',
-  ///   'Students': 'Étudiants',
-  ///   'Teachers': 'Enseignants',
-  ///   'Sign in': "S'identifier",
-  ///   'Information': 'Information',
-  ///   'Choose a password': 'Choisissez un mot de passe',
-  ///   'Next': 'Suivant',
-  ///   'Yes': 'Oui',
-  ///   'No': 'Non',
-  ///   'Name': 'Nom',
-  ///   'Age': 'Âge',
-  ///   'Add': 'Ajouter',
-  ///   'Email address': 'Adresse e-mail',
-  ///   'Password': 'Mot de passe',
-  ///   'Remember Me': 'Souviens-toi de moi',
-  ///   'Forgot Password?': 'Mot de passe oublié?',
-  ///   "Don't have an Account?": "Vous n'avez pas de compte ?",
-  ///   'New Account': 'Nouveau compte',
-  ///   'Sign Up': "S'inscrire",
-  ///   'Courses': 'Cours',
-  ///   'Subject': 'Sujet',
-  ///   'Exams': 'Examens',
-  ///   'Premium': 'Prime',
-  ///   'Free': 'Libérer',
-  ///   'Enrollments': 'Inscriptions',
-  ///   'Subscription': 'Abonnement',
-  ///   'Messages': 'Messages',
-  ///   'Transactions': 'Transactions',
-  ///   'Link': 'Lien',
-  ///   'Bad Request': 'Mauvaise demande',
-  ///   'Forbidden': 'Interdit',
-  ///   'Unauthorized': 'Non autorisé',
-  ///   'Try again later': 'Réessayez plus tard',
-  ///   'Internal': 'Interne',
-  ///   'Unknown': 'Inconnue',
-  ///   'Timeout': 'Temps libre',
-  ///   'Default': 'Défaut',
-  ///   'Cache': 'Cache',
-  ///   'Internet': "l'Internet",
-  ///   'Content': 'Contenu',
-  ///   'Change Language': 'Changer de langue',
-  ///   'Logout': 'Se déconnecter',
-  ///   'Log In': 'Connexion',
-  /// };
-
-  /// Use this getter below for your MaterialApp supportedLocales parameter
-  /// It will also load the translations defined above.
-  /// For example,AppTranslations class below extends L10nTranslations with a factory constructor:
-  ///
-  ///     return MaterialApp(
-  ///       debugShowCheckedModeBanner: false,
-  ///       theme: ThemeData(
-  ///         primarySwatch: Colors.blue,
-  ///       ),
-  ///       locale: AppTranslations().appLocale,
-  ///       supportedLocales: AppTranslations().supportedLocales,
-  ///       home: const MyHomePage(),
-  ///     );
-  List<Locale> get supportedLocales {
-    if (_supportedLocales.isEmpty) {
-      final locale = textLocale;
-      // The 'original' text's Locale.
-      L10n._textLocale = locale;
-      L10n.setAppLocale(locale);
-      L10n._addTranslations(this);
-      _supportedLocales.add(locale);
-      _supportedLocales.addAll(l10nMap.keys);
-    }
-    return _supportedLocales;
-  }
-
-  final List<Locale> _supportedLocales = [];
-
-  /// Initialize by loading the translations.
-  void initState() {
-    _supportedLocales.clear();
-    // Critical to set the App's Locale and translations.
-    supportedLocales;
-  }
-
-  /// Clear the Translations Map variable
-  void clearTranslations() => L10n._clearTranslations();
-
-  /// Add additional Translations
-  /// Overwrite existing Translation
-  void appendTranslations(Map<Locale, Map<String, String>> tr) =>
-      L10n._appendTranslations(tr);
-
-  /// Explicitly set a supported Locale using this class
-  /// Allow your App to not reference L10n or L10nLocale at all.
-  bool setAppLocale(Locale? locale) => L10n.setAppLocale(locale);
-
-  /// Get a Locale from the List of 'supported' Locales.
-  Locale? getLocale(int index) {
-    Locale? locale;
-    final localesList = _supportedLocales;
-    if (localesList.isNotEmpty && index >= 0) {
-      locale = localesList[index];
-    }
-    return locale;
-  }
-
-  /// Return an instance of the L10Locale class
-  /// Really not needed. L10n. prefix can be used instead. Merely for conformity.
-  L10nLocale? of(BuildContext context) =>
-      Localizations.of<L10nLocale>(context, L10nLocale);
-
-  /// Return a Locale object from the provided String
-  Locale? toLocale(String? _locale) {
-    Locale? locale;
-
-    if (_locale != null && _locale.isNotEmpty) {
-      //
-      final localeCode = _locale.split('-');
-      String languageCode;
-      String? countryCode;
-      if (localeCode.length == 2) {
-        languageCode = localeCode.first;
-        countryCode = localeCode.last;
-      } else {
-        languageCode = localeCode.first;
-      }
-      locale = Locale(languageCode, countryCode);
-    }
-    return locale;
-  }
-}
+/// For example, the Map variables would be defined in separate .dart files
+///
+/// @override
+/// Map<Locale, Map<String, String>> get l10nMap => {
+///   const Locale('ar', 'SA'): arSA,
+///   const Locale('hi', 'IN'): hiIN,
+///   const Locale('es', 'AR'): esAR,
+///   const Locale('fr', 'FR'): frFR,
+///   const Locale('pt', 'PT'): ptPT,
+///   const Locale('ko', 'KP'): koKP,
+///   const Locale('zh', 'CN'): zhCN,
+/// };
+///
+/// Each file will be dedicated to one particular Localization language:
+/// translations_arSA.dart
+/// translations_hiIN.dart
+/// translations_esAR.dart
+/// translations_frFR.dart
+/// translations_ptPT.dart
+/// translations_zhCN.dart
+///
+/// As an example, in the file translations_frFR.dart below:
+///
+/// Map<String, String> frFR = {
+///   'Parent': 'Parent',
+///   'Child': 'Enfant',
+///   'Quickstart': 'Démarrage rapide',
+///   'Get Started': 'Commencer',
+///   'Parents': 'Parents',
+///   'Students': 'Étudiants',
+///   'Teachers': 'Enseignants',
+///   'Sign in': "S'identifier",
+///   'Information': 'Information',
+///   'Choose a password': 'Choisissez un mot de passe',
+///   'Next': 'Suivant',
+///   'Yes': 'Oui',
+///   'No': 'Non',
+///   'Name': 'Nom',
+///   'Age': 'Âge',
+///   'Add': 'Ajouter',
+///   'Email address': 'Adresse e-mail',
+///   'Password': 'Mot de passe',
+///   'Remember Me': 'Souviens-toi de moi',
+///   'Forgot Password?': 'Mot de passe oublié?',
+///   "Don't have an Account?": "Vous n'avez pas de compte ?",
+///   'New Account': 'Nouveau compte',
+///   'Sign Up': "S'inscrire",
+///   'Courses': 'Cours',
+///   'Subject': 'Sujet',
+///   'Exams': 'Examens',
+///   'Premium': 'Prime',
+///   'Free': 'Libérer',
+///   'Enrollments': 'Inscriptions',
+///   'Subscription': 'Abonnement',
+///   'Messages': 'Messages',
+///   'Transactions': 'Transactions',
+///   'Link': 'Lien',
+///   'Bad Request': 'Mauvaise demande',
+///   'Forbidden': 'Interdit',
+///   'Unauthorized': 'Non autorisé',
+///   'Try again later': 'Réessayez plus tard',
+///   'Internal': 'Interne',
+///   'Unknown': 'Inconnue',
+///   'Timeout': 'Temps libre',
+///   'Default': 'Défaut',
+///   'Cache': 'Cache',
+///   'Internet': "l'Internet",
+///   'Content': 'Contenu',
+///   'Change Language': 'Changer de langue',
+///   'Logout': 'Se déconnecter',
+///   'Log In': 'Connexion',
+/// };
 
 /// Provide the suffix on every string for translation.
 /// Append to the end of Strings to change to a translation.
-extension L10nTranslation on String {
+extension L10nTranslate on String {
   //
   String get tr => L10nLocale().translate(this);
+}
+
+///
+///  Supply the 'translation Map objects'
+///
+///
+///  e.g.  //ignore: non_constant_identifier_names
+///        final AppTrs = AppTranslations();
+///
+abstract class L10nTranslations {
+  L10nTranslations() {
+    // Important to set textLocale first.
+    L10n.textLocale = textLocale;
+    L10n.addTranslations(l10nMap);
+  }
+
+  /// The text's original Locale
+  Locale get textLocale;
+
+  /// The app's translations
+  Map<Locale, Map<String, String>> get l10nMap;
+
+  /// Use this getter below for your MaterialApp supportedLocales parameter
+  /// It will also load the translations defined above.
+  List<Locale> get supportedLocales => L10n.supportedLocales;
+
+  /// Record the device's Locale at that point in time.
+  /// Traditionally placed in a build() function.
+  Locale? localeOf(BuildContext? context, {bool? allowLocaleChange}) =>
+      L10n.localeOf(context, allowLocaleChange: allowLocaleChange);
+
+  /// Supply the Localization Delegate
+  LocalizationsDelegate<L10nLocale> get delegate => L10n.delegate;
+
+  /// Explicitly set a supported Locale using this class
+  /// Allow your App to not reference L10n or L10nLocale at all.
+  /// Set the Locale to translate
+  /// Returns true if set to that Locale
+  bool setLocale(Locale? locale) => L10n.setAppLocale(locale);
+
+  /// Get a Locale from the List of 'supported' Locales.
+  Locale? getLocale(int index) => L10n.getLocale(index);
+
+  /// Return a Locale object from the provided String
+  Locale? toLocale(String? _locale) => L10n.toLocale(_locale);
+
+  /// Convert a Text object to one with a translation.
+  Text of(
+    Text? text, {
+    Key? key,
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextAlign? textAlign,
+    TextDirection? textDirection,
+    Locale? locale,
+    bool? softWrap,
+    TextOverflow? overflow,
+    double? textScaleFactor,
+    int? maxLines,
+    String? semanticsLabel,
+    TextWidthBasis? textWidthBasis,
+  }) =>
+      L10n.of(
+        text,
+        key: key,
+        style: style,
+        strutStyle: strutStyle,
+        textAlign: textAlign,
+        textDirection: textDirection,
+        locale: locale,
+        softWrap: softWrap,
+        overflow: overflow,
+        textScaleFactor: textScaleFactor,
+        maxLines: maxLines,
+        semanticsLabel: semanticsLabel,
+        textWidthBasis: textWidthBasis,
+      );
+
+  /// Supply a Text object for the translation.
+  Text t(
+    String? data, {
+    Key? key,
+    TextStyle? style,
+    StrutStyle? strutStyle,
+    TextAlign? textAlign,
+    TextDirection? textDirection,
+    Locale? locale,
+    bool? softWrap,
+    TextOverflow? overflow,
+    double? textScaleFactor,
+    int? maxLines,
+    String? semanticsLabel,
+    TextWidthBasis? textWidthBasis,
+    ui.TextHeightBehavior? textHeightBehavior,
+  }) =>
+      L10n.t(
+        data,
+        key: key,
+        style: style,
+        strutStyle: strutStyle,
+        textAlign: textAlign,
+        textDirection: textDirection,
+        locale: locale,
+        softWrap: softWrap,
+        overflow: overflow,
+        textScaleFactor: textScaleFactor,
+        maxLines: maxLines,
+        semanticsLabel: semanticsLabel,
+        textWidthBasis: textWidthBasis,
+        textHeightBehavior: textHeightBehavior,
+      );
+
+  /// Translate the String
+  String s(String? word) => L10n.s(word);
 }
 
 //ignore: non_constant_identifier_names
@@ -219,6 +244,8 @@ class L10nLocale {
     if (locale != null) {
       // Assign it as the App's Locale if not assigned yet.
       _appLocale ??= locale;
+      // Assign it as the 'text' used.
+      textLocale ??= locale;
       if (_deviceLocale == null) {
         _deviceLocale = locale;
       } else if (locale != _deviceLocale) {
@@ -236,6 +263,15 @@ class L10nLocale {
   }
 
   /// The Locale of the original text at times being translated.
+  Locale? get textLocale => _textLocale ?? const Locale('en', 'US');
+
+  /// Set the Locale of the app's visible text if any.
+  set textLocale(Locale? locale) {
+    if (locale != null) {
+      _textLocale = locale;
+    }
+  }
+
   Locale? _textLocale;
 
   /// A flag allowing the Locale to change dynamically or not.
@@ -249,36 +285,9 @@ class L10nLocale {
   Locale? get deviceLocale => _deviceLocale;
   Locale? _deviceLocale;
 
-  /// Contains the app's 'current' translations.
-  final Map<String, String> _thisTranslation = {};
-
   /// The App's Locale
   Locale? get appLocale => _appLocale;
   Locale? _appLocale;
-
-  /// Set the Locale to translate
-  /// Returns true if set to that Locale
-  bool setAppLocale(Locale? locale) {
-    final set = locale != null &&
-        // If there's translations, it must be found among them.
-        (_translations.isEmpty ||
-            _translations.containsKey(locale) ||
-            _textLocale == null ||
-            locale == _textLocale);
-    if (set) {
-      if (_appLocale == null) {
-        _appLocale = locale;
-      } else {
-        if (locale != _appLocale) {
-          // Important to reset to false to find any new translations.
-          _localeSet = false;
-          _appLocale = locale;
-        }
-        // else, if they're the same, don't change anything.
-      }
-    }
-    return set;
-  }
 
   /// Supply the 'backup' Locale if any.
   Locale? get backupLocale => _backupLocale;
@@ -291,28 +300,49 @@ class L10nLocale {
     }
   }
 
+  /// Use this getter below for your MaterialApp supportedLocales parameter
+  /// It will also load the translations defined above.
+  List<Locale> get supportedLocales => _supportedLocales.isEmpty
+      ? const <Locale>[Locale('en', 'US')]
+      : _supportedLocales;
+
+  //ignore: prefer_final_fields
+  final List<Locale> _supportedLocales = [];
+
+  /// Contains the app's 'current' translations.
+  final Map<String, String> _thisTranslation = {};
+
   /// Translation Map
   Map<Locale, Map<String, String>> get translations => _translations;
   final Map<Locale, Map<String, String>> _translations = {};
 
   /// Supply the translations
   /// Return true if successful
-  bool _addTranslations(L10nTranslations? tr) {
-    var init = tr != null;
+  bool addTranslations(Map<Locale, Map<String, String>>? map) {
+    // Initialize only once.
+    var init = _translations.isEmpty;
+    if (init) {
+      init = map != null;
+    }
     if (init) {
       final size = _translations.length;
-      _translations.addAll(tr.l10nMap);
+      _translations.addAll(map!);
+      if (textLocale != null) {
+        // Framework picks the first one.
+        _supportedLocales.add(textLocale!);
+      }
+      _supportedLocales.addAll(map.keys);
       init = _translations.length > size;
     }
     return init;
   }
 
   /// Clear the Translations Map variable
-  void _clearTranslations() => _translations.clear();
+  void clearTranslations() => _translations.clear();
 
   /// Add additional Translations
   /// Overwrite existing Translation
-  void _appendTranslations(Map<Locale, Map<String, String>> tr) {
+  void appendTranslations(Map<Locale, Map<String, String>> tr) {
     tr.forEach((key, map) {
       if (_translations.containsKey(key)) {
         _translations[key]!.addAll(map);
@@ -372,7 +402,7 @@ class L10nLocale {
     return firstWord;
   }
 
-  /// Retrieve the tanslations for the specific Locale.
+  /// Retrieve the translations for the specific Locale.
   Map<String, String>? _getTranslations(Locale? thisLocale) {
     //
     if (thisLocale == null) {
@@ -466,12 +496,8 @@ class L10nLocale {
   ///  Code from the older version.
   ///
 
-  /// Supply the Localiztion Delegate
+  /// Supply the Localization Delegate
   LocalizationsDelegate<L10nLocale> get delegate => L10nDelegate();
-
-  /// Return the List of Locales offered for Translations.
-  /// (For Internal Use Only) Use supportedLocales in L10nTranslations instead.
-  List<Locale> get _supportedLocales => _translations.keys.toList();
 
   /// Called by the LocalizationsDelegate object
   Future<L10nLocale> load([Locale? locale]) {
@@ -511,6 +537,62 @@ class L10nLocale {
       }
     }
     return systemLocale;
+  }
+
+  /// Explicitly set a supported Locale using this class
+  /// Allow your App to not reference L10n or L10nLocale at all.
+  /// Set the Locale to translate
+  /// Returns true if set to that Locale
+  bool setAppLocale(Locale? locale) {
+    final set = locale != null &&
+        // If there's translations, it must be found among them.
+        (_translations.isEmpty ||
+            _translations.containsKey(locale) ||
+            _textLocale == null ||
+            locale == _textLocale);
+    if (set) {
+      if (_appLocale == null) {
+        _appLocale = locale;
+      } else {
+        if (locale != _appLocale) {
+          // Important to reset to false to find any new translations.
+          _localeSet = false;
+          _appLocale = locale;
+        }
+        // else, if they're the same, don't change anything.
+      }
+    }
+    return set;
+  }
+
+  /// Get a Locale from the List of 'supported' Locales.
+  Locale? getLocale(int index) {
+    Locale? locale;
+    final localesList = _supportedLocales;
+    if (localesList.isNotEmpty && index >= 0) {
+      locale = localesList[index];
+    }
+    return locale;
+  }
+
+  /// Return a Locale object from the provided String
+  Locale? toLocale(String? _locale) {
+    Locale? locale;
+
+    if (_locale != null && _locale.isNotEmpty) {
+      //
+      final localeCode = _locale.split('-');
+      String languageCode;
+      String? countryCode;
+      if (localeCode.length == 2) {
+        languageCode = localeCode.first;
+        countryCode = localeCode.last;
+      } else {
+        languageCode = localeCode.first;
+      }
+      locale = Locale(languageCode, countryCode);
+    }
+    return locale;
   }
 }
 

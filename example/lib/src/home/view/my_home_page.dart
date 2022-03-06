@@ -2,8 +2,6 @@
 ///
 ///
 
-import 'package:example/src/controller.dart';
-
 import 'package:example/src/view.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -16,13 +14,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
-    /// Supply the app's translations
-    /// Of course, if you've supplied the 'supportedLocales to
-    /// the MaterialApp or CupertinoApp widget, you've already done so:
-    /// eg. MaterialApp(supportedLocales: AppTranslations().supportedLocales,
-    /// Call this anyway as a good practice.
-    AppTranslations().initState();
     langPopup();
   }
 
@@ -121,10 +112,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   const Text('Unauthorized'),
                   Text('Unauthorized'.tr)
                 ]),
-                _Row(children: [
-                  const Text('Please, try again'),
-                  Text('Please, try again'.tr)
-                ]),
                 _Row(children: [const Text('Internal'), Text('Internal'.tr)]),
                 _Row(children: [const Text('Unknown'), Text('Unknown'.tr)]),
                 _Row(children: [const Text('Timeout'), Text('Timeout'.tr)]),
@@ -156,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _menuItems.add(
         PopupMenuItem(
           onTap: () {
-            AppTranslations().setAppLocale(locales[cnt].keys.first);
+            L10n.setAppLocale(locales[cnt].keys.first);
             setState(() {});
           },
           child: Text(locales[cnt].values.first),

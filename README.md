@@ -19,7 +19,8 @@ dependencies:
   l10n_translator:^1.0.0
 ```
 ##### Documentation
-[!![flags](https://user-images.githubusercontent.com/32497443/156692779-309948ad-51d8-44d0-9ecd-3e3d8a82ab8a.jpg)
+Tap image below for free article on Medium.com:
+[![flags](https://user-images.githubusercontent.com/32497443/156692779-309948ad-51d8-44d0-9ecd-3e3d8a82ab8a.jpg)
 ](https://andrious.medium.com/flutter-localization-translations-e8f43ceadfee)
 ##### Other Dart Packages
 [![packages](https://user-images.githubusercontent.com/32497443/64993716-5c818280-d89c-11e9-87b5-f35aee3e22f4.jpg)](https://pub.dev/publishers/andrioussolutions.com/packages)
