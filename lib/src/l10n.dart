@@ -398,9 +398,8 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
       }
     }
 
-    if (_deviceLocale != null) {
-      _deviceLocale = systemLocales.isNotEmpty ? systemLocales.first : null;
-    }
+    // Determine the device's default Locale. Assume the first trip will do it.
+    _deviceLocale ??= systemLocales.isNotEmpty ? systemLocales.first : null;
 
     if (_backupLocale == null &&
         supportedLocales != null &&

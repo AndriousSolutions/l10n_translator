@@ -1,4 +1,8 @@
 
+## 3.0.1
+March 15, 2022
+- _deviceLocale ??= systemLocales.isNotEmpty
+
 ## 3.0.0+01
 March 15, 2022
 - Merged L10nTranslations and L10nDelegate into one class, L10n
