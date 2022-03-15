@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       locale: AppTrs.textLocale,
       supportedLocales: AppTrs.supportedLocales,
+      localeResolutionCallback: AppTrs.localeResolutionCallback,
       localizationsDelegates: [
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

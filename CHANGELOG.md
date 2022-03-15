@@ -1,9 +1,10 @@
 
-## 3.0.0
+## 3.0.0+01
 March 15, 2022
 - Merged L10nTranslations and L10nDelegate into one class, L10n
 - Replaced L10n.setAppLocale() with L10n.setLocale()
 - Deprecated localeOf() and clearTranslations()
+- Updated localeResolutionCallback()
 
 ## 2.0.0+01
 March 05, 2022

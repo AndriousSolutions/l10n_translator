@@ -205,6 +205,8 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
       _supportedLocales.clear();
       final size = _translations.length;
       _translations.addAll(map!);
+      // Record the app's text Locale.
+      _textLocale = textLocale;
       // Framework picks the first one.
       _supportedLocales.add(textLocale);
       _supportedLocales.addAll(map.keys);
@@ -214,6 +216,9 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
     }
     return init;
   }
+
+  /// The text's original Locale assigned to a static variable
+  static Locale? _textLocale;
 
   /// Clear the Translations Map variable
   @Deprecated('Not a wise capability.')
@@ -261,9 +266,12 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
 
     var translations = _getTranslations(appLocale);
 
-    if (translations == null && _backupLocale != null) {
-      //
-      translations = _getTranslations(_backupLocale);
+    if (translations == null) {
+      // If not the 'default' Locale, assign instead the backup.
+      if (appLocale != _textLocale && _backupLocale != null) {
+        //
+        translations = _getTranslations(_backupLocale);
+      }
     }
 
     String firstWord = word;
@@ -375,12 +383,6 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
 
     if (_appLocale == null) {
       _appLocale = preferredLocale;
-      _deviceLocale = systemLocales.isNotEmpty ? systemLocales.first : null;
-      if (supportedLocales != null && supportedLocales.length > 1) {
-        final list = supportedLocales.toList(growable: false);
-        // Assume the second Locale a suitable backup.
-        _backupLocale = list[1];
-      }
     } else {
       // If the passed Locale is unique but supported.
       if (systemLocales.isNotEmpty) {
@@ -394,6 +396,18 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
           preferredLocale = _appLocale;
         }
       }
+    }
+
+    if (_deviceLocale != null) {
+      _deviceLocale = systemLocales.isNotEmpty ? systemLocales.first : null;
+    }
+
+    if (_backupLocale == null &&
+        supportedLocales != null &&
+        supportedLocales.length > 1) {
+      final list = supportedLocales.toList(growable: false);
+      // Assume the second Locale a suitable backup.
+      _backupLocale = list[1];
     }
     return preferredLocale;
   }
