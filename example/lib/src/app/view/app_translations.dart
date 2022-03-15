@@ -2,13 +2,13 @@
 ///
 ///
 
-import 'package:example/src/view.dart'
-    show L10nTranslations, Locale, arSA, esAR, frFR, hiIN, koKP, ptPT, zhCN;
+import 'package:example/src/view.dart';
+//    show L10n, Locale, arSA, esAR, frFR, hiIN, koKP, ptPT, zhCN;
 
 //ignore: non_constant_identifier_names
 final AppTrs = AppTranslations();
 
-class AppTranslations extends L10nTranslations {
+class AppTranslations extends L10n {
   factory AppTranslations() => _this ??= AppTranslations._();
   AppTranslations._();
   static AppTranslations? _this;

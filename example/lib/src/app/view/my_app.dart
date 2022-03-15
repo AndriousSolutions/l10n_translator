@@ -24,10 +24,6 @@ class MyApp extends StatelessWidget {
       debug.debugRepaintTextRainbowEnabled = false;
       return true;
     }());
-
-    // Establish the app's Locale.
-    AppTrs.localeOf(context);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -39,7 +35,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        AppTrs.delegate,
+        L10n.delegate!,
       ],
       home: const MyHomePage(),
     );
