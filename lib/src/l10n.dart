@@ -379,7 +379,7 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
     }
 
     // The full system-reported supported locales of the device.
-    final systemLocales = WidgetsBinding.instance!.window.locales;
+    final systemLocales = WidgetsBinding.instance.window.locales;
 
     if (_appLocale == null) {
       _appLocale = preferredLocale;

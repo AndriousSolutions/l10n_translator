@@ -1,4 +1,9 @@
 
+## 3.1.0
+June 01, 2022
+- Updated Dart   sdk: '>=2.17.1 <3.0.0'
+- Null operator '!' not longer necessary for 'WidgetsBinding' in Flutter 3.x
+
 ## 3.0.1
 March 15, 2022
 - _deviceLocale ??= systemLocales.isNotEmpty
