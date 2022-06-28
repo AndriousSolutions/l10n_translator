@@ -1,4 +1,8 @@
 
+## 3.2.0
+June 27, 2022
+- get delegate => this; Changed from an static to an instance reference.
+
 ## 3.1.0
 June 01, 2022
 - Updated Dart   sdk: '>=2.17.1 <3.0.0'

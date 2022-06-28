@@ -211,8 +211,6 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
       _supportedLocales.add(textLocale);
       _supportedLocales.addAll(map.keys);
       init = _translations.length > size;
-      // Assign as the delegate
-      delegate = this;
     }
     return init;
   }
@@ -471,7 +469,7 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
   }
 
   /// Supply the Localization Delegate (It's itself!)
-  static LocalizationsDelegate<L10n>? delegate;
+  LocalizationsDelegate<L10n>? get delegate => this;
 
   Locale? _locale;
 
