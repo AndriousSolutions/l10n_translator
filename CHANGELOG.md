@@ -1,4 +1,8 @@
 
+## 4.1.0
+September 14, 2022
+- static Locale get prevLocale
+
 ## 4.0.0
 September 14, 2022
 - factory L10n() Back to a Singleton pattern

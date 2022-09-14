@@ -119,7 +119,7 @@ class L10n extends LocalizationsDelegate<L10n> {
   L10n._();
   static L10n? _this;
   //
-  /// The text's original Locale
+  /// The current Locale
   static Locale get locale {
     Locale locale;
     if (_appLocale != null) {
@@ -163,9 +163,12 @@ class L10n extends LocalizationsDelegate<L10n> {
 //    }
   }
 
-  static Locale? _prevLocale;
   // The app's current Locale
   static Locale? _appLocale;
+
+  /// The previous Locale
+  static Locale get prevLocale => _prevLocale ??= locale;
+  static Locale? _prevLocale;
 
   /// The app's translations
   static Map<Locale, Map<String, String>> get translations => _translations;
