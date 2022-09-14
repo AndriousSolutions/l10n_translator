@@ -1,4 +1,8 @@
 
+## 4.0.0
+September 14, 2022
+- factory L10n() Back to a Singleton pattern
+
 ## 3.2.0
 June 27, 2022
 - get delegate => this; Changed from an static to an instance reference.

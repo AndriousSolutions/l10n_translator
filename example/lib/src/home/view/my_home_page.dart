@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _menuItems.add(
         PopupMenuItem(
           onTap: () {
-            L10n.setLocale(locales[cnt].keys.first);
+            MyApp.currentLocale.value = locales[cnt].keys.first;
             setState(() {});
           },
           child: Text(locales[cnt].values.first),

@@ -113,42 +113,73 @@ extension L10nTranslate on String {
   String get tr => L10n.translate(this);
 }
 
-/// The Translations Manager Class
-abstract class L10n extends LocalizationsDelegate<L10n> {
+/// The Localization Class
+class L10n extends LocalizationsDelegate<L10n> {
+  factory L10n() => _this ??= L10n._();
+  L10n._();
+  static L10n? _this;
   //
   /// The text's original Locale
-  Locale get textLocale;
-
-  /// The app's translations
-  Map<Locale, Map<String, String>> get l10nMap;
-
-  /// Record the device's Locale at that point in time.
-  /// Traditionally placed in a build() function.
-  @Deprecated('This function was found to be unhelpful.')
-  static Locale? localeOf(BuildContext? context, {bool? allowLocaleChange}) {
-    Locale? locale;
-    if (context != null) {
-      // May return null if unable to determine Localization.
-      locale = Localizations.maybeLocaleOf(context);
-    }
-    if (locale != null) {
-      // Assign it as the App's Locale if not assigned yet.
-      _appLocale ??= locale;
-      if (_deviceLocale == null) {
-        _deviceLocale = locale;
-      } else if (locale != _deviceLocale) {
-        // The device's Locale has changed.
-        _deviceLocale = locale;
-        // allowLocaleChange parameter takes precedence over the field, allowDeviceChangeLocale
-        final change = allowLocaleChange == null && allowDeviceChangeLocale;
-        if (change || allowLocaleChange!) {
-          // The App is to change Locale with this device.
-          setLocale(locale);
-        }
+  static Locale get locale {
+    Locale locale;
+    if (_appLocale != null) {
+      locale = _appLocale!;
+    } else {
+      final preferredLocales =
+          WidgetsBinding.instance.platformDispatcher.locales;
+      if (preferredLocales.isNotEmpty) {
+        locale = preferredLocales.first;
+        _appLocale = locale;
+        _prevLocale ??= locale;
+      } else {
+        locale = const Locale('en', 'US');
       }
     }
     return locale;
   }
+
+  /// Assign a new Locale
+  static set locale(Locale? locale) {
+    //
+    if (locale == null) {
+      return;
+    }
+    // Has to be among the supported Locales
+//    if (_localesSupported.isEmpty || _localesSupported.contains(locale)) {
+    if (_appLocale == null) {
+      _appLocale = locale;
+      // Record the 'previous' assigned Locale
+      _prevLocale ??= locale;
+    } else {
+      // We're changing the Locale
+      if (locale != _appLocale) {
+        // Important to reset to false to find any new translations.
+        _localeSet = false;
+        _prevLocale = _appLocale;
+        _appLocale = locale;
+      }
+      // else, if they're the same, don't change anything.
+    }
+//    }
+  }
+
+  static Locale? _prevLocale;
+  // The app's current Locale
+  static Locale? _appLocale;
+
+  /// The app's translations
+  static Map<Locale, Map<String, String>> get translations => _translations;
+  static set translations(Map<Locale, Map<String, String>>? translateMap) {
+    // Can only assign it once
+    if (_translations.isEmpty && translateMap != null) {
+      _translations.addAll(translateMap);
+    }
+  }
+
+  static final Map<Locale, Map<String, String>> _translations = {};
+
+  /// Supply the Localization Delegate (It's itself!)
+  static LocalizationsDelegate<L10n> get delegate => L10n();
 
   /// A flag allowing the Locale to change dynamically or not.
   static bool allowDeviceChangeLocale = false;
@@ -158,69 +189,98 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
   static bool _localeSet = false;
 
   /// Supported Locales
-  List<Locale> get supportedLocales {
-    if (_initLocales(textLocale, l10nMap)) {
-      _localesSupported = _supportedLocales;
+  static List<Locale> get supportedLocales {
+    // Assume it's supported.
+    if (_supportedLocales.isEmpty) {
+      // Loads only once.
+      if (_translations.isNotEmpty) {
+        // Record the app's translated Locales.
+        _supportedLocales.addAll(_translations.keys);
+      }
+      //
+      final _locale = locale;
+
+      if (!_supportedLocales.contains(_locale)) {
+        _supportedLocales.add(_locale);
+      }
     }
+    // _localesSupported = _supportedLocales;
     return _supportedLocales;
   }
 
-  final List<Locale> _supportedLocales = [];
+  static final List<Locale> _supportedLocales = [];
 
-  static late List<Locale> _localesSupported = [];
+  // static late List<Locale> _localesSupported = [];
 
   /// Intended to store the device's original Locale.
-  static Locale? get deviceLocale => _deviceLocale;
+  static Locale? get deviceLocale {
+    if (_deviceLocale == null) {
+      // The full system-reported supported locales of the device.
+      final systemLocales = WidgetsBinding.instance.window.locales;
+      // Determine the device's default Locale. Assume the first will do it.
+      _deviceLocale ??= systemLocales.isNotEmpty ? systemLocales.first : null;
+    }
+    return _deviceLocale;
+  }
+
+  // The device's original Locale
   static Locale? _deviceLocale;
 
-  /// The App's Locale
-  static Locale? get appLocale => _appLocale;
-  static Locale? _appLocale;
-
   /// Supply the 'backup' Locale if any.
-  static Locale? get backupLocale => _backupLocale;
+  static Locale? get backupLocale {
+    if (_backupLocale == null) {
+      if (supportedLocales.length > 1) {
+        // Assume the second Locale a suitable backup.
+        _backupLocale = _supportedLocales[1];
+      } else {
+        _backupLocale = locale;
+      }
+    }
+    return _backupLocale;
+  }
+
+  static set backupLocale(Locale? locale) {
+    if (locale != null) {
+      // Only assign once.
+      _backupLocale ??= locale;
+    }
+  }
+
   static Locale? _backupLocale;
 
-  /// Set the 'backup' Locale to use.
-  void setAppBackupLocale(Locale? locale) {
-    if (locale != null) {
-      _backupLocale = locale;
+  /// Get a Locale from the List of 'supported' Locales.
+  Locale? getLocale(int index) {
+    Locale? locale;
+    final localesList = _supportedLocales;
+    if (localesList.isNotEmpty && index >= 0) {
+      locale = localesList[index];
     }
+    return locale;
   }
 
-  /// Translation Map
-  static Map<Locale, Map<String, String>> get translations => _translations;
-  static final Map<Locale, Map<String, String>> _translations = {};
+  /// Return a Locale object from the provided String
+  static Locale? toLocale(String? _locale) {
+    Locale? locale;
 
-  /// Supply the translations
-  /// Return true if successful
-  bool _initLocales(Locale textLocale, Map<Locale, Map<String, String>>? map) {
-    // Initialize only once.
-    var init = _translations.isEmpty;
-    if (init) {
-      init = map != null;
+    if (_locale != null && _locale.isNotEmpty) {
+      //
+      var localeCode = _locale.split('_');
+      if (localeCode.length == 1) {
+        // Possibly it's in a language tag format
+        localeCode = _locale.split('-');
+      }
+      String languageCode;
+      String? countryCode;
+      if (localeCode.length == 2) {
+        languageCode = localeCode.first;
+        countryCode = localeCode.last;
+      } else {
+        languageCode = localeCode.first;
+      }
+      locale = Locale(languageCode, countryCode);
     }
-    if (init) {
-      _translations.clear();
-      _supportedLocales.clear();
-      final size = _translations.length;
-      _translations.addAll(map!);
-      // Record the app's text Locale.
-      _textLocale = textLocale;
-      // Framework picks the first one.
-      _supportedLocales.add(textLocale);
-      _supportedLocales.addAll(map.keys);
-      init = _translations.length > size;
-    }
-    return init;
+    return locale;
   }
-
-  /// The text's original Locale assigned to a static variable
-  static Locale? _textLocale;
-
-  /// Clear the Translations Map variable
-  @Deprecated('Not a wise capability.')
-  static void clearTranslations() {}
 
   /// Add additional Translations
   /// Overwrite existing Translation
@@ -238,7 +298,7 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
   static String translate(String word) {
     // If we have no means to determine the translation.
     // Keep testing. It could change.
-    if (appLocale?.languageCode == null) {
+    if (_appLocale?.languageCode == null) {
       //
       return word;
     }
@@ -262,11 +322,11 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
     // If a new Locale occurs this will be reset.
     _localeSet = true;
 
-    var translations = _getTranslations(appLocale);
+    var translations = _getTranslations(_appLocale);
 
     if (translations == null) {
       // If not the 'default' Locale, assign instead the backup.
-      if (appLocale != _textLocale && _backupLocale != null) {
+      if (_appLocale != _prevLocale && _backupLocale != null) {
         //
         translations = _getTranslations(_backupLocale);
       }
@@ -349,12 +409,9 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
   static String s(String? word) => translate(word ?? '');
 
   /// Called by the LocalizationsDelegate. Possibly needed to resolve current Locale.
-  Locale? localeResolutionCallback(
+  static Locale? localeResolutionCallback(
       Locale? preferredLocale, Iterable<Locale>? supportedLocales) {
     //
-    // In case this function was not called yet.
-    _initLocales(textLocale, l10nMap);
-
     if (preferredLocale == null) {
       // Retrieve the 'first' locale in the supported locales.
       final locales = _supportedLocales;
@@ -366,112 +423,17 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
           preferredLocale = locales.first;
         } else {
           // Find the first supported locale
-          for (final _locale in supportedLocales.toList(growable: false)) {
+          for (final locale in supportedLocales.toList(growable: false)) {
             //
-            if (locales.contains(_locale)) {
-              preferredLocale = _locale;
+            if (locales.contains(locale)) {
+              preferredLocale = locale;
             }
           }
         }
       }
     }
-
-    // The full system-reported supported locales of the device.
-    final systemLocales = WidgetsBinding.instance.window.locales;
-
-    if (_appLocale == null) {
-      _appLocale = preferredLocale;
-    } else {
-      // If the passed Locale is unique but supported.
-      if (systemLocales.isNotEmpty) {
-        if (!systemLocales.contains(preferredLocale) &&
-            supportedLocales != null &&
-            supportedLocales.contains(preferredLocale)) {
-          // It's a specific Locale assigned to the app
-          _appLocale = preferredLocale;
-        } else {
-          // Override with the app's preferred locale.
-          preferredLocale = _appLocale;
-        }
-      }
-    }
-
-    // Determine the device's default Locale. Assume the first trip will do it.
-    _deviceLocale ??= systemLocales.isNotEmpty ? systemLocales.first : null;
-
-    if (_backupLocale == null &&
-        supportedLocales != null &&
-        supportedLocales.length > 1) {
-      final list = supportedLocales.toList(growable: false);
-      // Assume the second Locale a suitable backup.
-      _backupLocale = list[1];
-    }
     return preferredLocale;
   }
-
-  /// A more verbose method name
-  static bool setAppLocale(Locale? locale) => setLocale(locale);
-
-  /// Explicitly set a supported Locale using this class
-  /// Set the Locale to translate
-  /// Returns true if set to that Locale
-  static bool setLocale(Locale? locale) {
-    final set = locale != null &&
-        // If there's translations, it must be found among them.
-        (_localesSupported.isEmpty || _localesSupported.contains(locale));
-    if (set) {
-      if (_appLocale == null) {
-        _appLocale = locale;
-      } else {
-        if (locale != _appLocale) {
-          // Important to reset to false to find any new translations.
-          _localeSet = false;
-          _appLocale = locale;
-        }
-        // else, if they're the same, don't change anything.
-      }
-    }
-    return set;
-  }
-
-  /// Get a Locale from the List of 'supported' Locales.
-  Locale? getLocale(int index) {
-    Locale? locale;
-    final localesList = _supportedLocales;
-    if (localesList.isNotEmpty && index >= 0) {
-      locale = localesList[index];
-    }
-    return locale;
-  }
-
-  /// Return a Locale object from the provided String
-  static Locale? toLocale(String? _locale) {
-    Locale? locale;
-
-    if (_locale != null && _locale.isNotEmpty) {
-      //
-      var localeCode = _locale.split('_');
-      if (localeCode.length == 1) {
-        // Possibly it's in a language tag format
-        localeCode = _locale.split('-');
-      }
-      String languageCode;
-      String? countryCode;
-      if (localeCode.length == 2) {
-        languageCode = localeCode.first;
-        countryCode = localeCode.last;
-      } else {
-        languageCode = localeCode.first;
-      }
-      locale = Locale(languageCode, countryCode);
-    }
-    return locale;
-  }
-
-  /// Supply the Localization Delegate (It's itself!)
-  LocalizationsDelegate<L10n>? get delegate => this;
-
-  Locale? _locale;
 
   /// Return an instance of the L10Locale class
   /// Really not needed. L10n. prefix can be used instead. Merely for conformity.
@@ -486,29 +448,30 @@ abstract class L10n extends LocalizationsDelegate<L10n> {
 
     // Assume you're supplied the App's Locale.
     if (L10n._appLocale == null) {
-      supported = L10n.setLocale(locale);
+      L10n.locale = locale;
+      supported = L10n._appLocale == locale;
     } else {
       supported = locale == L10n._appLocale;
     }
-
+    // The device's Locale
     if (!supported) {
-      supported = locale == L10n._deviceLocale;
+      supported = locale == L10n.deviceLocale;
     }
-
+    // Check the supported Locales
     if (!supported) {
-      supported = L10n._localesSupported.contains(locale);
+      // supported = L10n._localesSupported.contains(locale);
+      supported = L10n.supportedLocales.contains(locale);
     }
-
     return supported;
   }
 
   @override
   Future<L10n> load([Locale? locale]) {
-    L10n.setLocale(locale);
+    L10n.locale = locale;
     return SynchronousFuture<L10n>(this);
   }
 
   /// Reload if the delegate has changed.
   @override
-  bool shouldReload(L10n old) => _locale != old._locale;
+  bool shouldReload(L10n old) => L10n._appLocale != L10n._prevLocale;
 }
