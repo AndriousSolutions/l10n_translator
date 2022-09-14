@@ -1,7 +1,8 @@
 
-## 4.1.0
+## 4.1.0+01
 September 14, 2022
 - static Locale get prevLocale
+- static Locale? getLocale(int index) {
 
 ## 4.0.0
 September 14, 2022

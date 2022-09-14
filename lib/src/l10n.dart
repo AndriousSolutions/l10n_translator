@@ -252,7 +252,7 @@ class L10n extends LocalizationsDelegate<L10n> {
   static Locale? _backupLocale;
 
   /// Get a Locale from the List of 'supported' Locales.
-  Locale? getLocale(int index) {
+  static Locale? getLocale(int index) {
     Locale? locale;
     final localesList = _supportedLocales;
     if (localesList.isNotEmpty && index >= 0) {
