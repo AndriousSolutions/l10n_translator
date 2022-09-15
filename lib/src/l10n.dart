@@ -211,6 +211,13 @@ class L10n extends LocalizationsDelegate<L10n> {
     return _supportedLocales;
   }
 
+  static set supportedLocales(List<Locale>? locales) {
+    // Can only set once!
+    if (locales != null && supportedLocales.isEmpty) {
+      _supportedLocales.addAll(locales);
+    }
+  }
+
   static final List<Locale> _supportedLocales = [];
 
   // static late List<Locale> _localesSupported = [];
