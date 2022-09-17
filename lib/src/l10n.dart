@@ -194,17 +194,19 @@ class L10n extends LocalizationsDelegate<L10n> {
   /// Supported Locales
   static List<Locale> get supportedLocales {
     // Assume it's supported.
-    if (_supportedLocales.isEmpty) {
+    if (_supportedLocales.isEmpty || _supportedLocales.length == 1) {
+      //
+      final _locale = locale;
+      // If not already there
+      if (!_supportedLocales.contains(_locale)) {
+        if (_translations.isNotEmpty && !_translations.keys.contains(_locale)) {
+          _supportedLocales.add(_locale);
+        }
+      }
       // Loads only once.
       if (_translations.isNotEmpty) {
         // Record the app's translated Locales.
         _supportedLocales.addAll(_translations.keys);
-      }
-      //
-      final _locale = locale;
-
-      if (!_supportedLocales.contains(_locale)) {
-        _supportedLocales.add(_locale);
       }
     }
     // _localesSupported = _supportedLocales;

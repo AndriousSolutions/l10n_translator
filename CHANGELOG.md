@@ -1,4 +1,8 @@
 
+## 4.1.1
+September 18, 2022
+- _translations.isNotEmpty && !_translations.keys.contains(_locale)
+
 ## 4.1.0+02
 September 14, 2022
 - static Locale get prevLocale
