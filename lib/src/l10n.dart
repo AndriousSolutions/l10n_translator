@@ -152,7 +152,7 @@ class L10n extends LocalizationsDelegate<L10n> {
       _prevLocale ??= locale;
     } else {
       // We're changing the Locale
-      if (locale != _appLocale) {
+      if (_localeSet && locale != _appLocale) {
         // Important to reset to false to find any new translations.
         _localeSet = false;
         _prevLocale = _appLocale;
@@ -483,7 +483,8 @@ class L10n extends LocalizationsDelegate<L10n> {
     return SynchronousFuture<L10n>(this);
   }
 
-  /// Reload if the delegate has changed.
+  /// Reload if the local has changed.
   @override
-  bool shouldReload(L10n old) => L10n._appLocale != L10n._prevLocale;
+  bool shouldReload(L10n old) =>
+      !_localeSet && L10n._appLocale != L10n._prevLocale;
 }

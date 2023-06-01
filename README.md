@@ -1,6 +1,6 @@
 # l10n_translator
 *Supply Translations to your Flutter app.*
-[![Medium](https://img.shields.io/badge/Medium-Read-green?logo=Medium)](https://andrious.medium.com/flutter-localization-translations-e8f43ceadfee) [![Pub.dev](https://img.shields.io/pub/v/L10n_translator.svg?logo=data:image/png)](https://pub.dev/packages/l10n_translator) [![GitHub stars](https://github.com/AndriousSolutions/l10n_translator.svg?style=social&amp;logo=github)](https://github.com/AndriousSolutions/l10n_translator/stargazers)
+[![Medium](https://img.shields.io/badge/Medium-Read-green?logo=Medium)](https://andrious.medium.com/flutter-localization-translations-e8f43ceadfee) [![GitHub stars](https://github.com/AndriousSolutions/l10n_translator.svg?style=social&amp;logo=github)](https://github.com/AndriousSolutions/l10n_translator/stargazers)
 
 The idea behind this library package is to allow your app to easily display its text in any number of supported translations. Those translations are stored in a easily readable Map varibles accessed by developers and non-developers alike.
 #### Sample App

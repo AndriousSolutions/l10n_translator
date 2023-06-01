@@ -1,4 +1,9 @@
 
+## 4.1.2
+May 31, 2023
+- if (_localeSet && locale != _appLocale)
+- Upgraded to Dart 3
+
 ## 4.1.1
 September 18, 2022
 - _translations.isNotEmpty && !_translations.keys.contains(_locale)
