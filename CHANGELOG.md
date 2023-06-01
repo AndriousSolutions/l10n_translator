@@ -1,7 +1,9 @@
 
-## 4.1.2
+## 4.1.2+1
 May 31, 2023
 - if (_localeSet && locale != _appLocale)
+  /// The full system-reported supported locales of the device.
+- WidgetsBinding.instance.platformDispatcher.locales; 
 - Upgraded to Dart 3
 
 ## 4.1.1

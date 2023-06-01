@@ -228,7 +228,7 @@ class L10n extends LocalizationsDelegate<L10n> {
   static Locale? get deviceLocale {
     if (_deviceLocale == null) {
       // The full system-reported supported locales of the device.
-      final systemLocales = WidgetsBinding.instance.window.locales;
+      final systemLocales = WidgetsBinding.instance.platformDispatcher.locales;
       // Determine the device's default Locale. Assume the first will do it.
       _deviceLocale ??= systemLocales.isNotEmpty ? systemLocales.first : null;
     }
