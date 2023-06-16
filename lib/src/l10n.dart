@@ -220,7 +220,9 @@ class L10n extends LocalizationsDelegate<L10n> {
     }
   }
 
-  static final List<Locale> _supportedLocales = [];
+  static final List<Locale> _supportedLocales = <Locale>[
+    const Locale('en', 'US')
+  ];
 
   // static late List<Locale> _localesSupported = [];
 

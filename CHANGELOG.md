@@ -1,4 +1,8 @@
 
+## 4.1.3
+June 16, 2023
+- _supportedLocales when defined defaults to Locale('en', 'US').
+
 ## 4.1.2+1
 May 31, 2023
 - if (_localeSet && locale != _appLocale)
