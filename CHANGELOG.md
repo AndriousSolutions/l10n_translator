@@ -1,4 +1,8 @@
 
+## 4.1.4
+March 17, 2024
+- Removed _localeSet from if (locale != _appLocale) {
+
 ## 4.1.3
 June 16, 2023
 - _supportedLocales when defined defaults to Locale('en', 'US').

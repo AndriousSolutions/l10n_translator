@@ -152,7 +152,7 @@ class L10n extends LocalizationsDelegate<L10n> {
       _prevLocale ??= locale;
     } else {
       // We're changing the Locale
-      if (_localeSet && locale != _appLocale) {
+      if (locale != _appLocale) {
         // Important to reset to false to find any new translations.
         _localeSet = false;
         _prevLocale = _appLocale;
